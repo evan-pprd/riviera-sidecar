@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Riviera Sidecar — Visites authentiques de Nice et de la Côte d'Azur à bord de side-cars vintage. Une expérience inoubliable sur la French Riviera." />
+<meta name="theme-color" content="#0E2A47" />
+<title>Riviera Sidecar — L'Échappée Belle sur la Côte d'Azur</title>
+<link rel="icon" href="https://www.riviera-sidecar.fr/img/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Italiana&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ivory:        #F4ECD8;
+  --ivory-2:      #EDE2C8;
+  --paper:        #FAF4E4;
+  --navy:         #0E2A47;
+  --navy-2:       #07182B;
+  --gold:         #C8A560;
+  --gold-2:       #B0883E;
+  --terracotta:   #C26B4E;
+  --sea:          #1F5F8C;
+  --ink:          #15212F;
+  --muted:        #5A6675;
+
+  --font-display: "Bebas Neue", "Impact", sans-serif;
+  --font-serif:   "Italiana", "Cormorant Garamond", serif;
+  --font-body:    "Lora", Georgia, serif;
+  --font-script:  "Pinyon Script", cursive;
+
+  --max:          1240px;
+  --radius:       2px;
+  --shadow-soft:  0 30px 60px -25px rgba(14, 42, 71, 0.35);
+  --shadow-deep:  0 40px 80px -30px rgba(14, 42, 71, 0.55);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--ivory);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; transition: color .25s ease; }
+button { font: inherit; cursor: pointer; border: 0; background: none; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(176,136,62,0.08) 0, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(14,42,71,0.07) 0, transparent 45%);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 18px 0;
+  background: transparent;
+  transition: background .35s ease, padding .35s ease, box-shadow .35s ease;
+}
+.nav.scrolled {
+  background: rgba(244, 236, 216, 0.96);
+  backdrop-filter: blur(10px);
+  padding: 10px 0;
+  box-shadow: 0 10px 40px -20px rgba(14, 42, 71, 0.25);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 60;
+  flex-shrink: 0;
+}
+.nav-logo img {
+  height: 56px;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+  transition: height .35s ease;
+}
+.nav.scrolled .nav-logo img { height: 46px; }
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-menu > li { position: relative; }
+.nav-menu a {
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  color: var(--ivory);
+  text-transform: uppercase;
+  padding: 8px 0;
+  position: relative;
+  transition: color .25s ease;
+}
+.nav.scrolled .nav-menu a { color: var(--navy); }
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px;
+  width: 0;
+  background: var(--gold);
+  transition: width .3s ease;
+}
+.nav-menu a:hover::after { width: 100%; }
+.nav-menu a:hover { color: var(--gold); }
+
+.nav-submenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  padding: 14px 0;
+  min-width: 260px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s ease;
+  box-shadow: var(--shadow-soft);
+}
+.nav-submenu::before {
+  content: "";
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px; height: 12px;
+  background: var(--paper);
+  border-left: 1px solid var(--gold);
+  border-top: 1px solid var(--gold);
+}
+.nav-menu > li:hover .nav-submenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-submenu li { list-style: none; }
+.nav-submenu a {
+  display: block;
+  color: var(--navy) !important;
+  padding: 10px 22px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.nav-submenu a:hover { background: var(--ivory-2); color: var(--gold-2) !important; }
+.nav-submenu a::after { display: none; }
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--ivory);
+  font-family: var(--font-display);
+  letter-spacing: 0.18em;
+  font-size: 13px;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: all .3s ease;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.nav.scrolled .nav-cta { color: var(--navy); }
+.nav-cta:hover {
+  background: var(--gold);
+  color: var(--navy) !important;
+  letter-spacing: 0.22em;
+}
+
+/* ============================================================
+   LANGUAGE SWITCHER
+   ============================================================ */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.lang-switcher {
+  position: relative;
+  z-index: 60;
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  cursor: pointer;
+  transition: all .3s ease;
+  white-space: nowrap;
+  line-height: 1;
+  box-sizing: border-box;
+}
+.lang-btn:hover { background: var(--gold); }
+.lang-flag-btn {
+  width: 20px;
+  height: 13px;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+.lang-chevron {
+  width: 10px; height: 10px;
+  stroke: var(--ivory);
+  transition: transform .3s ease, stroke .3s ease;
+  flex-shrink: 0;
+}
+.nav.scrolled .lang-chevron { stroke: var(--navy); }
+.lang-btn:hover .lang-chevron { stroke: var(--navy); }
+.lang-switcher.open .lang-chevron { transform: rotate(180deg); }
+
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  min-width: 170px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity .25s ease, transform .25s ease;
+  box-shadow: 0 20px 50px -15px rgba(14,42,71,0.4);
+  z-index: 200;
+  overflow: hidden;
+}
+/* Art Déco top accent line */
+.lang-dropdown::before {
+  content: "";
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold), var(--gold-2));
+}
+.lang-switcher.open .lang-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  min-height: 46px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  letter-spacing: 0.14em;
+  font-size: 13px;
+  color: var(--navy);
+  text-transform: uppercase;
+  transition: background .18s ease, color .18s ease;
+  border: none;
+  border-bottom: 1px solid rgba(200,165,96,0.15);
+  background: none;
+  width: 100%;
+  text-align: left;
+  line-height: 1;
+}
+.lang-option:last-child { border-bottom: 0; }
+.lang-option:hover { background: var(--ivory-2); color: var(--gold-2); }
+.lang-option.active {
+  color: var(--gold-2);
+  background: rgba(200,165,96,0.1);
+  font-weight: bold;
+}
+.lang-flag-img {
+  width: 26px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.22);
+}
+
+.nav-toggle { display: none; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--ivory);
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(180deg, rgba(7,24,43,0.55) 0%, rgba(7,24,43,0.65) 60%, rgba(7,24,43,0.85) 100%),
+    url("https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_2.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.85) contrast(1.05);
+  transform: scale(1.05);
+  animation: kenburns 20s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0%   { transform: scale(1.05) translate(0,0); }
+  100% { transform: scale(1.15) translate(-1.5%, -1.5%); }
+}
+.hero-rays {
+  position: absolute;
+  top: -25%; left: 50%;
+  transform: translateX(-50%);
+  width: 1400px; height: 1400px;
+  z-index: -1;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 140px 20px 80px;
+  max-width: 1100px;
+  width: 100%;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-display);
+  letter-spacing: 0.5em;
+  font-size: 13px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 1s ease .2s forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: "";
+  width: 50px; height: 1px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 11vw, 168px);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: fadeUp 1s ease .4s forwards;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+}
+.hero-script {
+  font-family: var(--font-script);
+  font-size: clamp(30px, 5vw, 64px);
+  color: var(--gold);
+  line-height: 1;
+  margin: -8px 0 28px;
+  opacity: 0;
+  animation: fadeUp 1s ease .6s forwards;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.hero-sub {
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 2.4vw, 28px);
+  font-style: italic;
+  letter-spacing: 0.05em;
+  max-width: 720px;
+  margin: 0 auto 48px;
+  line-height: 1.4;
+  opacity: 0;
+  animation: fadeUp 1s ease .8s forwards;
+}
+.hero-actions {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  font-family: var(--font-display);
+  letter-spacing: 0.22em;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  transition: all .35s ease;
+  position: relative;
+}
+.btn-primary { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.btn-primary:hover { background: transparent; color: var(--gold); letter-spacing: 0.26em; }
+.btn-outline { border-color: var(--ivory); color: var(--ivory); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); letter-spacing: 0.26em; }
+.btn svg { width: 16px; height: 16px; }
+
+/* ============================================================
+   HERO BUTTONS — Animation sweep (vikiWayne style)
+   ============================================================ */
+.hero-actions .btn {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 800ms ease, transform 800ms ease,
+              box-shadow 800ms ease, outline 800ms ease,
+              letter-spacing 800ms ease;
+}
+.hero-actions .btn::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 800ms ease;
+}
+.hero-actions .btn:hover { transform: scale(1.07); }
+.hero-actions .btn:hover::before { width: 250%; }
+
+/* Primary — doré */
+.hero-actions .btn-primary {
+  color: var(--gold);
+  outline: 2px solid var(--gold);
+}
+.hero-actions .btn-primary::before {
+  background-color: var(--gold);
+}
+.hero-actions .btn-primary:hover {
+  color: var(--navy);
+  outline: 2px solid var(--gold-2);
+  box-shadow: 4px 5px 17px -4px rgba(200,165,96,0.55);
+  letter-spacing: 0.26em;
+}
+
+/* Outline — ivoire */
+.hero-actions .btn-outline {
+  color: var(--ivory);
+  outline: 2px solid rgba(244,236,216,0.65);
+}
+.hero-actions .btn-outline::before {
+  background-color: var(--ivory);
+}
+.hero-actions .btn-outline:hover {
+  color: var(--navy);
+  outline: 2px solid var(--gold);
+  box-shadow: 4px 5px 17px -4px rgba(200,165,96,0.4);
+  letter-spacing: 0.26em;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  letter-spacing: 0.3em;
+  font-size: 11px;
+  color: var(--ivory);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.75;
+  z-index: 2;
+}
+.hero-scroll::after {
+  content: "";
+  width: 1px; height: 50px;
+  background: linear-gradient(180deg, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+  50%      { opacity: 1;   transform: scaleY(1); }
+}
+.corner {
+  position: absolute;
+  width: 80px; height: 80px;
+  border: 1px solid var(--gold);
+  opacity: 0.6;
+  z-index: 2;
+  pointer-events: none;
+}
+.corner-tl { top: 100px; left: 28px; border-right: 0; border-bottom: 0; }
+.corner-tr { top: 100px; right: 28px; border-left: 0; border-bottom: 0; }
+.corner-bl { bottom: 28px; left: 28px; border-right: 0; border-top: 0; }
+.corner-br { bottom: 28px; right: 28px; border-left: 0; border-top: 0; }
+
+/* ============================================================
+   SECTION COMMON
+   ============================================================ */
+section { position: relative; z-index: 2; }
+.section { padding: 120px 0; }
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-display);
+  letter-spacing: 0.4em;
+  font-size: 13px;
+  color: var(--gold-2);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.section-eyebrow::before {
+  content: "";
+  width: 40px; height: 1px;
+  background: var(--gold);
+}
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--navy);
+  margin-bottom: 24px;
+  max-width: 780px;
+}
+.section-title em {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: 0.9em;
+  color: var(--gold-2);
+}
+.section-lead {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 700px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+.wave-divider {
+  height: 60px; width: 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'><path d='M0,30 Q150,5 300,30 T600,30 T900,30 T1200,30 L1200,60 L0,60 Z' fill='%23EDE2C8'/></svg>");
+  background-size: 1200px 60px;
+  background-repeat: repeat-x;
+}
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+.intro { background: var(--ivory); padding-top: 140px; }
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.intro-text p { margin-bottom: 22px; font-size: 17px; color: var(--ink); }
+.intro-text p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-size: 5em;
+  float: left;
+  line-height: 0.85;
+  padding: 8px 14px 0 0;
+  color: var(--gold-2);
+}
+.intro-visual { position: relative; aspect-ratio: 4/5; }
+.intro-visual::before {
+  content: "";
+  position: absolute;
+  inset: 18px -18px -18px 18px;
+  border: 1px solid var(--gold);
+  z-index: 0;
+}
+.intro-visual img {
+  position: relative; z-index: 1;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  box-shadow: var(--shadow-deep);
+  filter: saturate(0.9) contrast(1.05);
+}
+.intro-stamp {
+  position: absolute;
+  bottom: -30px; left: -30px;
+  z-index: 2;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--ivory);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-family: var(--font-display);
+  letter-spacing: 0.15em;
+  font-size: 12px;
+  line-height: 1.3;
+  border: 3px double var(--gold);
+  transform: rotate(-8deg);
+  box-shadow: var(--shadow-soft);
+}
+.intro-stamp strong {
+  font-size: 20px;
+  color: var(--gold);
+  display: block;
+  margin: 4px 0;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================================
+   TOURS
+   ============================================================ */
+.tours { background: var(--ivory-2); padding: 140px 0; }
+.tours-head {
+  text-align: center;
+  margin-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tours-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+.tour-card {
+  position: relative;
+  background: var(--paper);
+  overflow: hidden;
+  transition: transform .5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .5s ease;
+  display: flex;
+  flex-direction: column;
+}
+.tour-card:hover { transform: translateY(-12px); box-shadow: var(--shadow-deep); }
+.tour-img { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+.tour-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tour-card:hover .tour-img img { transform: scale(1.08); }
+.tour-img::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(7,24,43,0.6) 100%);
+}
+.tour-duration {
+  position: absolute;
+  top: 18px; left: 18px;
+  z-index: 2;
+  background: var(--navy);
+  color: var(--gold);
+  padding: 8px 14px;
+  font-family: var(--font-display);
+  letter-spacing: 0.15em;
+  font-size: 13px;
+  border: 1px solid var(--gold);
+}
+.tour-body {
+  padding: 32px 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.tour-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  color: var(--navy);
+  margin-bottom: 14px;
+  line-height: 1.05;
+}
+.tour-desc {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  flex: 1;
+  line-height: 1.65;
+}
+.tour-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  letter-spacing: 0.22em;
+  font-size: 13px;
+  color: var(--navy);
+  text-transform: uppercase;
+  padding-top: 18px;
+  border-top: 1px solid var(--ivory-2);
+  align-self: stretch;
+  transition: color .25s ease, letter-spacing .25s ease;
+}
+.tour-link svg { transition: transform .3s ease; }
+.tour-card:hover .tour-link { color: var(--gold-2); letter-spacing: 0.26em; }
+.tour-card:hover .tour-link svg { transform: translateX(6px); }
+
+/* ============================================================
+   EXPERIENCE
+   ============================================================ */
+.experience {
+  background: var(--navy);
+  color: var(--ivory);
+  padding: 140px 0;
+  position: relative;
+  overflow: hidden;
+}
+.experience::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(200,165,96,0.08) 0, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(200,165,96,0.06) 0, transparent 45%);
+  pointer-events: none;
+}
+.experience .section-title { color: var(--ivory); }
+.experience .section-eyebrow { color: var(--gold); }
+.experience .section-lead { color: rgba(244,236,216,0.75); }
+.experience-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 90px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+}
+.feature {
+  text-align: center;
+  padding: 36px 20px;
+  transition: transform .4s ease;
+}
+.feature:hover { transform: translateY(-6px); }
+.feature-icon {
+  width: 72px; height: 72px;
+  margin: 0 auto 24px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .4s ease;
+}
+.feature:hover .feature-icon { background: var(--gold); transform: rotate(360deg); }
+.feature-icon svg {
+  width: 32px; height: 32px;
+  stroke: var(--gold);
+  transition: stroke .4s ease;
+}
+.feature:hover .feature-icon svg { stroke: var(--navy); }
+.feature h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.feature p { font-size: 14px; color: rgba(244,236,216,0.7); line-height: 1.65; }
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+.events { background: var(--ivory); padding: 140px 0; }
+.events-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+}
+.events-visual { position: relative; aspect-ratio: 5/6; }
+.events-visual img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  box-shadow: var(--shadow-deep);
+  filter: sepia(0.15) saturate(0.95);
+}
+.events-visual::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border: 1px solid var(--gold);
+  z-index: -1;
+}
+.events-list { list-style: none; margin: 32px 0; }
+.events-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--ivory-2);
+  font-size: 17px;
+  font-family: var(--font-serif);
+  color: var(--navy);
+}
+.events-list li:last-child { border-bottom: 0; }
+.events-list svg { width: 28px; height: 28px; flex-shrink: 0; color: var(--gold-2); margin-top: 2px; }
+
+/* ============================================================
+   PRESS
+   ============================================================ */
+.press {
+  background: var(--paper);
+  padding: 100px 0;
+  border-top: 1px solid var(--ivory-2);
+  border-bottom: 1px solid var(--ivory-2);
+}
+.press-head {
+  text-align: center;
+  margin-bottom: 50px;
+  font-family: var(--font-display);
+  letter-spacing: 0.4em;
+  font-size: 14px;
+  color: var(--gold-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.press-head::before, .press-head::after {
+  content: "";
+  width: 60px; height: 1px;
+  background: var(--gold);
+}
+.press-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+.press-feature { position: relative; }
+.press-feature img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  box-shadow: var(--shadow-soft);
+  filter: saturate(0.9);
+}
+.press-feature-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(180deg, transparent, rgba(7,24,43,0.92));
+  color: var(--ivory);
+  padding: 60px 28px 24px;
+}
+.press-feature-caption .src {
+  font-family: var(--font-display);
+  letter-spacing: 0.3em;
+  font-size: 12px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.press-feature-caption h4 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.3;
+  font-style: italic;
+}
+.press-side .quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--navy);
+  line-height: 1.4;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 24px;
+}
+.press-side .quote::before {
+  content: "\201C";
+  position: absolute;
+  left: -10px; top: -30px;
+  font-size: 100px;
+  color: var(--gold);
+  font-family: var(--font-serif);
+  line-height: 1;
+}
+.press-side .quote-src {
+  font-family: var(--font-display);
+  letter-spacing: 0.25em;
+  font-size: 12px;
+  color: var(--gold-2);
+}
+.press-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  margin-top: 70px;
+  flex-wrap: wrap;
+}
+.press-logos img {
+  height: 70px; width: auto;
+  opacity: 0.7;
+  filter: grayscale(0.3);
+  transition: all .35s ease;
+}
+.press-logos a:hover img { opacity: 1; filter: none; transform: scale(1.05); }
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testimonials { background: var(--ivory); padding: 140px 0; text-align: center; }
+.testimonials-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 70px;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+.testimonial {
+  background: var(--paper);
+  padding: 40px 32px;
+  border: 1px solid var(--ivory-2);
+  text-align: left;
+  transition: all .4s ease;
+}
+.testimonial:hover {
+  border-color: var(--gold);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-soft);
+}
+.testimonial-stars { color: var(--gold); font-size: 18px; letter-spacing: 4px; margin-bottom: 18px; }
+.testimonial p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--navy);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+.testimonial-author {
+  font-family: var(--font-display);
+  letter-spacing: 0.2em;
+  font-size: 13px;
+  color: var(--gold-2);
+  padding-top: 18px;
+  border-top: 1px solid var(--ivory-2);
+}
+.testimonial-author span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact {
+  position: relative;
+  padding: 140px 0;
+  color: var(--ivory);
+  background-image:
+    linear-gradient(180deg, rgba(7,24,43,0.85), rgba(14,42,71,0.92)),
+    url("https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_3.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+}
+.contact-inner { max-width: 800px; margin: 0 auto; }
+.contact h2 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 96px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+.contact .script {
+  font-family: var(--font-script);
+  color: var(--gold);
+  font-size: clamp(28px, 4vw, 52px);
+  display: block;
+  margin: -10px 0 30px;
+}
+.contact p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 20px;
+  color: rgba(244,236,216,0.9);
+  margin-bottom: 50px;
+}
+.contact-info {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+.contact-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ivory);
+  font-family: var(--font-display);
+  letter-spacing: 0.18em;
+  font-size: 17px;
+}
+.contact-info a:hover { color: var(--gold); }
+.contact-info svg { width: 22px; height: 22px; stroke: var(--gold); }
+.contact-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: var(--navy-2);
+  color: var(--ivory);
+  padding: 70px 0 30px;
+  position: relative;
+  z-index: 2;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 50px;
+  margin-bottom: 50px;
+}
+.footer-brand img { height: 70px; margin-bottom: 22px; filter: brightness(1.1); }
+.footer-brand p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: rgba(244,236,216,0.6);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.footer h5 {
+  font-family: var(--font-display);
+  letter-spacing: 0.2em;
+  font-size: 14px;
+  color: var(--gold);
+  margin-bottom: 22px;
+  text-transform: uppercase;
+}
+.footer ul { list-style: none; }
+.footer ul li {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: rgba(244,236,216,0.65);
+  transition: color .25s ease;
+}
+.footer ul li a:hover { color: var(--gold); }
+.footer-social { display: flex; gap: 14px; margin-top: 20px; }
+.footer-social a {
+  width: 42px; height: 42px;
+  border: 1px solid rgba(244,236,216,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s ease;
+}
+.footer-social a:hover { border-color: var(--gold); background: var(--gold); }
+.footer-social svg { width: 18px; height: 18px; fill: var(--ivory); transition: fill .3s ease; }
+.footer-social a:hover svg { fill: var(--navy); }
+.footer-bottom {
+  border-top: 1px solid rgba(244,236,216,0.1);
+  padding-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(244,236,216,0.45);
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.footer-bottom .deco {
+  font-family: var(--font-script);
+  color: var(--gold);
+  font-size: 22px;
+}
+
+/* ============================================================
+   FLOATING BOOKING BUTTON
+   ============================================================ */
+.float-book {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  z-index: 100;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 14px 24px;
+  font-family: var(--font-display);
+  letter-spacing: 0.2em;
+  font-size: 14px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-deep);
+  display: none;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (≤ 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .nav-menu { display: none; }
+  .nav-cta { display: none; }
+
+  .nav-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 60;
+    padding: 8px;
+  }
+  .nav-toggle span {
+    width: 26px; height: 2px;
+    background: var(--ivory);
+    transition: all .3s ease;
+  }
+  .nav.scrolled .nav-toggle span { background: var(--navy); }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--navy); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--navy); }
+
+  .nav-menu.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    background: var(--paper);
+    padding: 100px 40px 100px;
+    gap: 0;
+    align-items: flex-start;
+    z-index: 55;
+    overflow-y: auto;
+  }
+  .nav-menu.open > li {
+    width: 100%;
+    border-bottom: 1px solid var(--ivory-2);
+  }
+  .nav-menu.open > li:first-child { border-top: 1px solid var(--ivory-2); }
+  .nav-menu.open > li > a {
+    color: var(--navy);
+    font-size: 20px;
+    display: block;
+    padding: 18px 0;
+  }
+  .nav-menu.open .nav-submenu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    border: 0;
+    padding: 0 0 14px 20px;
+    background: transparent;
+    box-shadow: none;
+    min-width: unset;
+  }
+  .nav-menu.open .nav-submenu::before { display: none; }
+  .nav-menu.open .nav-submenu li { list-style: none; }
+  .nav-menu.open .nav-submenu a {
+    font-size: 14px;
+    padding: 8px 0;
+    color: var(--muted) !important;
+    display: block;
+    letter-spacing: 0.12em;
+  }
+
+  /* Bouton réserver dans le menu mobile */
+  .nav-menu.open::after {
+    content: "Réserver une balade";
+    display: block;
+    margin-top: 30px;
+    padding: 16px 28px;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  /* Tours: 2 columns on tablet */
+  .tours-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Testimonials: 2 col on tablet */
+  .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .intro-grid, .events-grid, .press-grid { grid-template-columns: 1fr; gap: 50px; }
+  .features-grid { grid-template-columns: repeat(3, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .contact { background-attachment: scroll; }
+  .float-book { display: inline-flex; }
+
+  /* Intro visual: reduce offset frame */
+  .intro-visual::before { inset: 12px -10px -10px 10px; }
+  .intro-stamp { width: 110px; height: 110px; font-size: 11px; left: -10px; bottom: -15px; }
+
+  /* Events visual */
+  .events-visual { aspect-ratio: 4/3; }
+  .events-visual::after { inset: -10px; }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (≤ 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .tours-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .testimonials-grid { grid-template-columns: 1fr; max-width: 540px; margin: 0 auto; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .section, .tours, .experience, .events, .testimonials, .contact { padding: 80px 0; }
+  .intro { padding-top: 110px; }
+
+  .press-grid { grid-template-columns: 1fr; }
+  .press-logos { gap: 30px; }
+  .press-logos img { height: 50px; }
+
+  /* Lang dropdown: stay within screen */
+  .lang-dropdown { right: 0; min-width: 160px; }
+}
+
+/* ============================================================
+   RESPONSIVE — SMALL MOBILE (≤ 640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 16px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+
+  .hero-eyebrow { font-size: 10px; letter-spacing: 0.25em; }
+  .hero-eyebrow::before, .hero-eyebrow::after { width: 20px; }
+  .corner { width: 40px; height: 40px; }
+  .corner-tl, .corner-tr { top: 68px; }
+  .corner-tl { left: 12px; }
+  .corner-tr { right: 12px; }
+  .nav-logo img { height: 42px; }
+
+  .contact-info { gap: 20px; flex-direction: column; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+
+  /* Intro visual */
+  .intro-visual::before { display: none; }
+  .intro-stamp { left: 8px; bottom: -8px; width: 96px; height: 96px; font-size: 10px; }
+  .intro-stamp strong { font-size: 16px; }
+
+  /* Events */
+  .events-visual::after { display: none; }
+  .events-list li { font-size: 15px; gap: 14px; padding: 18px 0; }
+
+  /* Lang switcher: globe only, no gap */
+  .lang-btn { padding: 8px 10px; gap: 4px; }
+  .lang-flag-btn { width: 22px; height: 15px; }
+  .lang-chevron { width: 9px; height: 9px; }
+
+  .hero-content { padding: 120px 16px 60px; }
+  .hero-actions { gap: 10px; flex-direction: column; align-items: center; }
+  .btn { padding: 15px 28px; font-size: 13px; letter-spacing: 0.18em; }
+  .btn-outline { border-color: rgba(244,236,216,0.7); }
+
+  .section-lead { font-size: 16px; }
+  .testimonials-grid { max-width: 100%; }
+  .tours-grid { max-width: 100%; }
+
+  /* Feature cards: better mobile */
+  .feature { padding: 28px 16px; }
+  .feature-icon { width: 60px; height: 60px; }
+  .feature-icon svg { width: 26px; height: 26px; }
+
+  /* Testimonials */
+  .testimonial { padding: 28px 20px; }
+
+  /* Tour cards */
+  .tour-body { padding: 24px 20px; }
+
+  /* Float button: safe area for iOS */
+  .float-book {
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    right: 16px;
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+
+  /* Footer */
+  .footer-brand img { height: 55px; }
+  footer { padding: 50px 0 24px; }
+  .footer-grid { gap: 36px; }
+  .footer-bottom { padding-top: 20px; font-size: 12px; }
+
+  /* Nav mobile menu */
+  .nav-menu.open { padding: 90px 28px 90px; }
+  .nav-menu.open > li > a { font-size: 18px; padding: 16px 0; }
+}
+
+/* ============================================================
+   RESPONSIVE — VERY SMALL (≤ 380px)
+   ============================================================ */
+@media (max-width: 380px) {
+  .nav-menu.open { padding: 85px 20px 80px; }
+  .lang-dropdown { min-width: 150px; }
+  .lang-option { padding: 11px 14px; font-size: 12px; gap: 10px; }
+  .lang-flag-img { width: 22px; height: 15px; }
+  .hero-title { font-size: clamp(44px, 13vw, 80px); }
+  .btn { padding: 13px 22px; font-size: 12px; }
+  .section, .tours, .experience, .events, .testimonials, .contact { padding: 60px 0; }
+  .tours-grid, .testimonials-grid { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="https://www.riviera-sidecar.fr/img/logo.png" alt="Riviera Sidecar" />
+    </a>
+
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="#accueil" data-i18n="nav.home">Accueil</a></li>
+      <li>
+        <a href="#tours" data-i18n="nav.tours">City Tours ▾</a>
+        <ul class="nav-submenu">
+          <li><a href="https://www.riviera-sidecar.fr/nice_city_tour.html" data-i18n="nav.tour.nice">Nice : City Tour</a></li>
+          <li><a href="https://www.riviera-sidecar.fr/french_riviera_city_tour.html" data-i18n="nav.tour.riviera">French Riviera City Tour</a></li>
+          <li><a href="https://www.riviera-sidecar.fr/nice_by_night.html" data-i18n="nav.tour.night">Nice by Night</a></li>
+        </ul>
+      </li>
+      <li><a href="#events" data-i18n="nav.events">Évènements</a></li>
+      <li><a href="#avis" data-i18n="nav.reviews">Avis</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <a href="https://www.sumupbookings.com/riviera-sidecar" class="nav-cta" data-i18n="nav.book">Réserver</a>
+
+      <!-- Language Switcher -->
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang-btn" id="langBtn" aria-label="Changer de langue">
+          <img class="lang-flag-btn" id="langFlagBtn" src="https://flagcdn.com/w40/fr.png" alt="FR" />
+          <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-option active" data-lang="fr">
+            <img class="lang-flag-img" src="https://flagcdn.com/w40/fr.png" alt="Français" /> Français
+          </button>
+          <button class="lang-option" data-lang="en">
+            <img class="lang-flag-img" src="https://flagcdn.com/w40/gb.png" alt="English" /> English
+          </button>
+          <button class="lang-option" data-lang="de">
+            <img class="lang-flag-img" src="https://flagcdn.com/w40/de.png" alt="Deutsch" /> Deutsch
+          </button>
+          <button class="lang-option" data-lang="it">
+            <img class="lang-flag-img" src="https://flagcdn.com/w40/it.png" alt="Italiano" /> Italiano
+          </button>
+          <button class="lang-option" data-lang="es">
+            <img class="lang-flag-img" src="https://flagcdn.com/w40/es.png" alt="Español" /> Español
+          </button>
+        </div>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero" id="accueil">
+  <div class="hero-bg"></div>
+
+  <svg class="hero-rays" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#C8A560" stroke-width="0.6" fill="none">
+      <g transform="translate(400 400)">
+        <line x1="0" y1="0" x2="0" y2="-400" />
+        <line x1="0" y1="0" x2="69" y2="-394" />
+        <line x1="0" y1="0" x2="137" y2="-376" />
+        <line x1="0" y1="0" x2="200" y2="-346" />
+        <line x1="0" y1="0" x2="257" y2="-306" />
+        <line x1="0" y1="0" x2="306" y2="-257" />
+        <line x1="0" y1="0" x2="346" y2="-200" />
+        <line x1="0" y1="0" x2="376" y2="-137" />
+        <line x1="0" y1="0" x2="394" y2="-69" />
+        <line x1="0" y1="0" x2="400" y2="0" />
+        <line x1="0" y1="0" x2="394" y2="69" />
+        <line x1="0" y1="0" x2="376" y2="137" />
+        <line x1="0" y1="0" x2="346" y2="200" />
+        <line x1="0" y1="0" x2="306" y2="257" />
+        <line x1="0" y1="0" x2="257" y2="306" />
+        <line x1="0" y1="0" x2="200" y2="346" />
+        <line x1="0" y1="0" x2="137" y2="376" />
+        <line x1="0" y1="0" x2="69" y2="394" />
+        <line x1="0" y1="0" x2="0" y2="400" />
+        <line x1="0" y1="0" x2="-69" y2="394" />
+        <line x1="0" y1="0" x2="-137" y2="376" />
+        <line x1="0" y1="0" x2="-200" y2="346" />
+        <line x1="0" y1="0" x2="-257" y2="306" />
+        <line x1="0" y1="0" x2="-306" y2="257" />
+        <line x1="0" y1="0" x2="-346" y2="200" />
+        <line x1="0" y1="0" x2="-376" y2="137" />
+        <line x1="0" y1="0" x2="-394" y2="69" />
+        <line x1="0" y1="0" x2="-400" y2="0" />
+        <line x1="0" y1="0" x2="-394" y2="-69" />
+        <line x1="0" y1="0" x2="-376" y2="-137" />
+        <line x1="0" y1="0" x2="-346" y2="-200" />
+        <line x1="0" y1="0" x2="-306" y2="-257" />
+        <line x1="0" y1="0" x2="-257" y2="-306" />
+        <line x1="0" y1="0" x2="-200" y2="-346" />
+        <line x1="0" y1="0" x2="-137" y2="-376" />
+        <line x1="0" y1="0" x2="-69" y2="-394" />
+        <circle cx="0" cy="0" r="120" stroke-width="0.8" />
+        <circle cx="0" cy="0" r="200" stroke-width="0.5" />
+        <circle cx="0" cy="0" r="280" stroke-width="0.4" />
+      </g>
+    </g>
+  </svg>
+
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-i18n="hero.eyebrow">Nice · Monaco · Côte d'Azur</div>
+    <h1 class="hero-title">Riviera Sidecar</h1>
+    <div class="hero-script" data-i18n="hero.script">l'échappée belle</div>
+    <p class="hero-sub" data-i18n="hero.sub">Une expérience authentique et inoubliable à bord de side-cars vintage, entre mer turquoise, villages perchés et lumière du Sud.</p>
+    <div class="hero-actions">
+      <a href="https://www.sumupbookings.com/riviera-sidecar" class="btn btn-primary">
+        <span data-i18n="hero.book">Réserver ma balade</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#tours" class="btn btn-outline" data-i18n="hero.discover">Découvrir les tours</a>
+    </div>
+  </div>
+
+
+</header>
+
+<!-- ============================================================
+     INTRO
+     ============================================================ -->
+<section class="intro" id="intro">
+  <div class="container">
+    <div class="intro-grid">
+      <div class="intro-text">
+        <div class="section-eyebrow" data-i18n="intro.eyebrow">L'échappée belle</div>
+        <h2 class="section-title" data-i18n-html="intro.title">Plongez dans l'âme de la <em>Côte d'Azur</em></h2>
+        <p data-i18n="intro.p1">Venez visiter Nice et la French Riviera à bord de nos side-cars ! Laissez-vous conduire par un chauffeur expérimenté et profitez de la beauté des paysages.</p>
+        <p data-i18n="intro.p2">Nos balades en side-car sont bien plus qu'une simple visite touristique : c'est une plongée dans l'âme de la Côte d'Azur, un voyage dans le temps et l'espace qui éveille tous les sens. Entre mer et montagne, villages médiévaux et stations balnéaires chics, chaque étape est une nouvelle découverte.</p>
+        <p data-i18n="intro.p3">Montez à bord, laissez-vous rythmer par le ronronnement du moteur, le vent marin dans vos cheveux, et admirez le charme de la Riviera pour des souvenirs impérissables.</p>
+      </div>
+      <div class="intro-visual">
+        <img src="https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_1.jpg" alt="Panorama du Mont-Boron" />
+        <div class="intro-stamp">
+          <span data-i18n="intro.stamp.since">Depuis</span><strong>2024</strong>Nice — FR
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TOURS
+     ============================================================ -->
+<section class="tours" id="tours">
+  <div class="container">
+    <div class="tours-head">
+      <div class="section-eyebrow" data-i18n="tours.eyebrow">Nos itinéraires signature</div>
+      <h2 class="section-title" data-i18n-html="tours.title">Trois <em>balades</em> pour vivre la Riviera</h2>
+      <p class="section-lead" style="text-align:center;" data-i18n="tours.lead">De Nice à Monaco, de la Promenade des Anglais aux villages perchés, chaque tour est pensé pour révéler la magie de la Côte d'Azur.</p>
+    </div>
+
+    <div class="tours-grid">
+
+      <article class="tour-card">
+        <div class="tour-img">
+          <img src="https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_2.jpg" alt="Nice City Tour" />
+          <div class="tour-duration">1h15</div>
+        </div>
+        <div class="tour-body">
+          <h3 class="tour-title" data-i18n="tour1.title">Nice City Tour</h3>
+          <p class="tour-desc" data-i18n="tour1.desc">Visitez les lieux incontournables de Nissa la Bella : Place Masséna, Port de Nice, Mont-Boron, Villefranche-sur-Mer et son célèbre plongeoir de La Réserve.</p>
+          <a href="https://www.riviera-sidecar.fr/nice_city_tour.html" class="tour-link">
+            <span data-i18n="tours.more">Plus d'infos</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="tour-card">
+        <div class="tour-img">
+          <img src="https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_1.jpg" alt="French Riviera City Tour" />
+          <div class="tour-duration">2h30</div>
+        </div>
+        <div class="tour-body">
+          <h3 class="tour-title" data-i18n="tour2.title">French Riviera</h3>
+          <p class="tour-desc" data-i18n="tour2.desc">L'itinéraire complet de la Côte d'Azur : Beaulieu-sur-Mer, Cap d'Ail, Monaco, le circuit de F1, la Grande Corniche, La Turbie et Èze, village médiéval perché.</p>
+          <a href="https://www.riviera-sidecar.fr/french_riviera_city_tour.html" class="tour-link">
+            <span data-i18n="tours.more">Plus d'infos</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="tour-card">
+        <div class="tour-img">
+          <img src="https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_3.jpg" alt="Nice by Night" />
+          <div class="tour-duration" data-i18n="tours.night">Nuit</div>
+        </div>
+        <div class="tour-body">
+          <h3 class="tour-title" data-i18n="tour3.title">Nice by Night</h3>
+          <p class="tour-desc" data-i18n="tour3.desc">Nice se métamorphose à la nuit tombée. Flânez le long de la Promenade des Anglais illuminée, la douce brise marine et les lumières qui se reflètent sur la mer. Magie assurée.</p>
+          <a href="https://www.riviera-sidecar.fr/nice_by_night.html" class="tour-link">
+            <span data-i18n="tours.more">Plus d'infos</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EXPERIENCE
+     ============================================================ -->
+<section class="experience">
+  <div class="container">
+    <div class="experience-head">
+      <div class="section-eyebrow" data-i18n="exp.eyebrow">L'expérience Riviera</div>
+      <h2 class="section-title" data-i18n-html="exp.title">Cinq promesses, <em>un voyage unique</em></h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-12a8 8 0 1116 0c0 7.5-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 data-i18n="feat1.title">Confort & Sécurité</h3>
+        <p data-i18n="feat1.desc">Un véhicule moderne au style vintage, équipé des dernières technologies en matière de sécurité.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="12" cy="12" r="3"/><path d="M3 8h2M21 8h-2"/></svg>
+        </div>
+        <h3 data-i18n="feat2.title">Vue Panoramique</h3>
+        <p data-i18n="feat2.desc">Assis dans le panier, vous avez une vue dégagée sur les paysages — idéale pour des photos mémorables.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M9 21V12h6v9"/><path d="M5 12v9h14v-9"/></svg>
+        </div>
+        <h3 data-i18n="feat3.title">Accès Exclusif</h3>
+        <p data-i18n="feat3.desc">Le side-car se faufile dans les petites rues et les chemins pittoresques inaccessibles aux voitures.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <h3 data-i18n="feat4.title">Guide Local</h3>
+        <p data-i18n="feat4.desc">Votre chauffeur est un passionné de la région, prêt à partager anecdotes et secrets de la Riviera.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <h3 data-i18n="feat5.title">Authenticité</h3>
+        <p data-i18n="feat5.desc">Revivez l'âge d'or des voyages en side-car — nostalgique, élégant, hors du temps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EVENTS
+     ============================================================ -->
+<section class="events" id="events">
+  <div class="container">
+    <div class="events-grid">
+      <div class="events-visual">
+        <img src="https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_2.jpg" alt="Évènements et balades sur mesure" />
+      </div>
+      <div>
+        <div class="section-eyebrow" data-i18n="events.eyebrow">Sur mesure</div>
+        <h2 class="section-title" data-i18n-html="events.title">Pour vos plus <em>beaux jours</em></h2>
+        <p style="font-size:17px; color:var(--muted); margin-bottom:8px;" data-i18n="events.lead">Nous nous adaptons à toutes vos demandes particulières. À l'écoute de vos envies, nous ferons de notre mieux pour vous satisfaire.</p>
+
+        <ul class="events-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span data-i18n="events.item1">Mariages & cortèges nuptiaux</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span data-i18n="events.item2">Enterrements de vie de garçon / de jeune fille</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span data-i18n="events.item3">Évènements d'entreprise & séminaires</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span data-i18n-html="events.item4">Dégustation de produits locaux avec <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span data-i18n="events.item5">Prise en charge au lieu de votre choix (sans supplément sur Nice)</span>
+          </li>
+        </ul>
+
+        <a href="#contact" class="btn btn-primary" style="margin-top:20px; background:var(--navy); color:var(--gold); border-color:var(--navy);">
+          <span data-i18n="events.cta">Nous contacter</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRESS
+     ============================================================ -->
+<section class="press">
+  <div class="container">
+    <div class="press-head" data-i18n="press.head">Ils parlent de nous</div>
+
+    <div class="press-grid">
+      <a href="https://www.varmatin.com/detente/au-depart-de-nice-il-propose-des-balades-en-side-car-pour-decouvrir-la-cote-d-azur-autrement-994669" target="_blank" rel="noopener" class="press-feature">
+        <img src="https://nicematin-focus.sirius.press/2025/07/17/0/0/0/0/1128/752/75/0/48dbc32_upload-from-url-1-mzhceg0nawv2-data-art-15921042-ndb2tpxl.jpg?width=800&crop=3:2" alt="Article Var-Matin / Nice-Matin" />
+        <div class="press-feature-caption">
+          <div class="src">Nice-Matin · Var-Matin</div>
+          <h4 data-i18n="press.article">« Balades en side-car pour découvrir la Côte d'Azur autrement »</h4>
+        </div>
+      </a>
+
+      <div class="press-side">
+        <p class="quote" data-i18n="press.quote">Une visite rétro « à la française » qui révèle la Riviera sous un angle inattendu et terriblement charmant.</p>
+        <div class="quote-src"><a href="https://www.explorenicecotedazur.com/teste-pour-vous/une-balade-en-side-car-une-visite-retro-a-la-francaise/?_thumbnail_id=376416" target="_blank" rel="noopener">— Explore Nice Côte d'Azur</a></div>
+      </div>
+    </div>
+
+    <div class="press-logos">
+      <a href="https://www.explorenicecotedazur.com/fiche/riviera-sidecar/" target="_blank" rel="noopener">
+        <img src="https://www.riviera-sidecar.fr/img/EXPLORE_NCA.png" alt="Office de Tourisme Métropolitain de Nice Côte d'Azur" />
+      </a>
+      <a href="https://www.getyourguide.com/s/?q=supplier:493739" target="_blank" rel="noopener">
+        <img src="https://gyg.me/LH8d2OtF" alt="GetYourGuide" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section class="testimonials" id="avis">
+  <div class="container">
+    <div class="testimonials-head">
+      <div class="section-eyebrow" data-i18n="test.eyebrow">Nos clients parlent de nous</div>
+      <h2 class="section-title" style="text-align:center;" data-i18n-html="test.title">Des souvenirs qui <em>durent</em></h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p data-i18n="test1">« Superbe balade en side-car vintage ! Une expérience mémorable ! »</p>
+        <div class="testimonial-author">
+          <span data-i18n="test1.author">Voyageur GetYourGuide</span>
+          <span data-i18n="test1.country">États-Unis</span>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p data-i18n="test2">« Une visite magique à bord du sidecar ! Franck est passionné et ça se sent ! »</p>
+        <div class="testimonial-author">
+          Lexy<span data-i18n="test2.country">Canada</span>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p data-i18n="test3">« Une expérience inoubliable à travers Nice avec un guide super sympa. »</p>
+        <div class="testimonial-author">
+          Sheila<span data-i18n="test3.country">Italie</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT
+     ============================================================ -->
+<section class="contact" id="contact">
+  <div class="container contact-inner">
+    <h2 data-i18n="contact.title">Prêts à embarquer ?</h2>
+    <div class="script" data-i18n="contact.script">votre aventure commence ici</div>
+    <p data-i18n="contact.lead">Réservez votre balade ou contactez-nous pour une demande sur mesure. Nous serons ravis de partager la Riviera avec vous.</p>
+
+    <div class="contact-info">
+      <a href="tel:+33744985488">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13 1 .37 1.96.72 2.88a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.2-1.2a2 2 0 012.11-.45c.92.35 1.88.59 2.88.72a2 2 0 011.72 2.05z"/></svg>
+        07 44 98 54 88
+      </a>
+      <a href="mailto:contact@riviera-sidecar.fr">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        contact@riviera-sidecar.fr
+      </a>
+    </div>
+
+    <div class="contact-actions">
+      <a href="https://www.sumupbookings.com/riviera-sidecar" class="btn btn-primary" data-i18n="contact.book">Réserver en ligne</a>
+      <a href="https://www.instagram.com/riviera.sidecar/profilecard/?igsh=MTVoMWM0Z3Nja3I0Yw==" class="btn btn-outline" data-i18n="contact.instagram">Suivre sur Instagram</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <img src="https://www.riviera-sidecar.fr/img/logo.png" alt="Riviera Sidecar" />
+        <p data-i18n="footer.brand">L'échappée belle sur la Côte d'Azur. Balades authentiques en side-car vintage entre Nice, Monaco et la French Riviera.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/riviera.sidecar/profilecard/?igsh=MTVoMWM0Z3Nja3I0Yw==" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.25.07 1.62.07 4.85s0 3.6-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.25.06-1.62.07-4.85.07s-3.6 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.6 2.2 15.23 2.2 12s0-3.6.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.21 8.77 2.2 12 2.2zm0 1.8c-3.16 0-3.5 0-4.74.07-1.07.05-1.65.23-2.04.38-.51.2-.88.44-1.26.82-.38.38-.62.75-.82 1.26-.15.39-.33.97-.38 2.04C2.7 8.5 2.7 8.84 2.7 12s0 3.5.07 4.74c.05 1.07.23 1.65.38 2.04.2.51.44.88.82 1.26.38.38.75.62 1.26.82.39.15.97.33 2.04.38C8.5 21.3 8.84 21.3 12 21.3s3.5 0 4.74-.07c1.07-.05 1.65-.23 2.04-.38.51-.2.88-.44 1.26-.82.38-.38.62-.75.82-1.26.15-.39.33-.97.38-2.04.06-1.24.07-1.58.07-4.74s0-3.5-.07-4.74c-.05-1.07-.23-1.65-.38-2.04a3.3 3.3 0 00-.82-1.26 3.3 3.3 0 00-1.26-.82c-.39-.15-.97-.33-2.04-.38C15.5 4.01 15.16 4 12 4zm0 3.06A4.94 4.94 0 1112 17a4.94 4.94 0 010-9.88zm0 1.8a3.14 3.14 0 100 6.28 3.14 3.14 0 000-6.28zm5.16-2.16a1.16 1.16 0 110 2.32 1.16 1.16 0 010-2.32z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61578755213722" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H8v-2.9h2.4V9.8c0-2.36 1.4-3.66 3.55-3.66 1.03 0 2.1.18 2.1.18v2.32h-1.18c-1.17 0-1.53.73-1.53 1.47v1.76h2.6l-.42 2.9h-2.18v7A10 10 0 0022 12z"/></svg>
+          </a>
+          <a href="mailto:contact@riviera-sidecar.fr" aria-label="Email">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.nav">Navigation</h5>
+        <ul>
+          <li><a href="#accueil" data-i18n="nav.home">Accueil</a></li>
+          <li><a href="#tours" data-i18n="footer.nav.tours">Nos City Tours</a></li>
+          <li><a href="#events" data-i18n="nav.events">Évènements</a></li>
+          <li><a href="#avis" data-i18n="footer.reviews">Avis clients</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.tours.title">Nos tours</h5>
+        <ul>
+          <li><a href="https://www.riviera-sidecar.fr/nice_city_tour.html" data-i18n="nav.tour.nice">Nice : City Tour</a></li>
+          <li><a href="https://www.riviera-sidecar.fr/french_riviera_city_tour.html">French Riviera</a></li>
+          <li><a href="https://www.riviera-sidecar.fr/nice_by_night.html" data-i18n="nav.tour.night">Nice by Night</a></li>
+          <li><a href="https://www.sumupbookings.com/riviera-sidecar" data-i18n="footer.book">Réservation</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.contact.title">Contact</h5>
+        <ul>
+          <li><a href="tel:+33744985488">07 44 98 54 88</a></li>
+          <li><a href="mailto:contact@riviera-sidecar.fr">contact@riviera-sidecar.fr</a></li>
+          <li>Nice — French Riviera</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div id="copyright"></div>
+      <div class="deco" data-i18n="footer.deco">l'échappée belle</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating mobile booking button -->
+<a href="https://www.sumupbookings.com/riviera-sidecar" class="float-book">
+  <span data-i18n="float.book">Réserver</span>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+</a>
+
+<script>
+// ============================================================
+// TRANSLATIONS
+// ============================================================
+const i18n = {
+  fr: {
+    'nav.home': 'Accueil',
+    'nav.tours': 'City Tours ▾',
+    'nav.tour.nice': 'Nice : City Tour',
+    'nav.tour.riviera': 'French Riviera City Tour',
+    'nav.tour.night': 'Nice by Night',
+    'nav.events': 'Évènements',
+    'nav.reviews': 'Avis',
+    'nav.contact': 'Contact',
+    'nav.book': 'Réserver',
+    'hero.eyebrow': 'Nice · Monaco · Côte d\'Azur',
+    'hero.script': 'l\'échappée belle',
+    'hero.sub': 'Une expérience authentique et inoubliable à bord de side-cars vintage, entre mer turquoise, villages perchés et lumière du Sud.',
+    'hero.book': 'Réserver ma balade',
+    'hero.discover': 'Découvrir les tours',
+    'hero.scroll': 'Scroll',
+    'intro.eyebrow': 'L\'échappée belle',
+    'intro.title': 'Plongez dans l\'âme de la <em>Côte d\'Azur</em>',
+    'intro.p1': 'Venez visiter Nice et la French Riviera à bord de nos side-cars ! Laissez-vous conduire par un chauffeur expérimenté et profitez de la beauté des paysages.',
+    'intro.p2': 'Nos balades en side-car sont bien plus qu\'une simple visite touristique : c\'est une plongée dans l\'âme de la Côte d\'Azur, un voyage dans le temps et l\'espace qui éveille tous les sens. Entre mer et montagne, villages médiévaux et stations balnéaires chics, chaque étape est une nouvelle découverte.',
+    'intro.p3': 'Montez à bord, laissez-vous rythmer par le ronronnement du moteur, le vent marin dans vos cheveux, et admirez le charme de la Riviera pour des souvenirs impérissables.',
+    'intro.stamp.since': 'Depuis',
+    'tours.eyebrow': 'Nos itinéraires signature',
+    'tours.title': 'Trois <em>balades</em> pour vivre la Riviera',
+    'tours.lead': 'De Nice à Monaco, de la Promenade des Anglais aux villages perchés, chaque tour est pensé pour révéler la magie de la Côte d\'Azur.',
+    'tours.more': 'Plus d\'infos',
+    'tours.night': 'Nuit',
+    'tour1.title': 'Nice City Tour',
+    'tour1.desc': 'Visitez les lieux incontournables de Nissa la Bella : Place Masséna, Port de Nice, Mont-Boron, Villefranche-sur-Mer et son célèbre plongeoir de La Réserve.',
+    'tour2.title': 'French Riviera',
+    'tour2.desc': 'L\'itinéraire complet de la Côte d\'Azur : Beaulieu-sur-Mer, Cap d\'Ail, Monaco, le circuit de F1, la Grande Corniche, La Turbie et Èze, village médiéval perché.',
+    'tour3.title': 'Nice by Night',
+    'tour3.desc': 'Nice se métamorphose à la nuit tombée. Flânez le long de la Promenade des Anglais illuminée, la douce brise marine et les lumières qui se reflètent sur la mer. Magie assurée.',
+    'exp.eyebrow': 'L\'expérience Riviera',
+    'exp.title': 'Cinq promesses, <em>un voyage unique</em>',
+    'feat1.title': 'Confort & Sécurité',
+    'feat1.desc': 'Un véhicule moderne au style vintage, équipé des dernières technologies en matière de sécurité.',
+    'feat2.title': 'Vue Panoramique',
+    'feat2.desc': 'Assis dans le panier, vous avez une vue dégagée sur les paysages — idéale pour des photos mémorables.',
+    'feat3.title': 'Accès Exclusif',
+    'feat3.desc': 'Le side-car se faufile dans les petites rues et les chemins pittoresques inaccessibles aux voitures.',
+    'feat4.title': 'Guide Local',
+    'feat4.desc': 'Votre chauffeur est un passionné de la région, prêt à partager anecdotes et secrets de la Riviera.',
+    'feat5.title': 'Authenticité',
+    'feat5.desc': 'Revivez l\'âge d\'or des voyages en side-car — nostalgique, élégant, hors du temps.',
+    'events.eyebrow': 'Sur mesure',
+    'events.title': 'Pour vos plus <em>beaux jours</em>',
+    'events.lead': 'Nous nous adaptons à toutes vos demandes particulières. À l\'écoute de vos envies, nous ferons de notre mieux pour vous satisfaire.',
+    'events.item1': 'Mariages & cortèges nuptiaux',
+    'events.item2': 'Enterrements de vie de garçon / de jeune fille',
+    'events.item3': 'Évènements d\'entreprise & séminaires',
+    'events.item4': 'Dégustation de produits locaux avec <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a>',
+    'events.item5': 'Prise en charge au lieu de votre choix (sans supplément sur Nice)',
+    'events.cta': 'Nous contacter',
+    'press.head': 'Ils parlent de nous',
+    'press.quote': 'Une visite rétro « à la française » qui révèle la Riviera sous un angle inattendu et terriblement charmant.',
+    'press.article': '« Balades en side-car pour découvrir la Côte d\'Azur autrement »',
+    'test.eyebrow': 'Nos clients parlent de nous',
+    'test.title': 'Des souvenirs qui <em>durent</em>',
+    'test1': '« Superbe balade en side-car vintage ! Une expérience mémorable ! »',
+    'test2': '« Une visite magique à bord du sidecar ! Franck est passionné et ça se sent ! »',
+    'test3': '« Une expérience inoubliable à travers Nice avec un guide super sympa. »',
+    'test1.author': 'Voyageur GetYourGuide',
+    'test1.country': 'États-Unis',
+    'test2.country': 'Canada',
+    'test3.country': 'Italie',
+    'contact.title': 'Prêts à embarquer ?',
+    'contact.script': 'votre aventure commence ici',
+    'contact.lead': 'Réservez votre balade ou contactez-nous pour une demande sur mesure. Nous serons ravis de partager la Riviera avec vous.',
+    'contact.book': 'Réserver en ligne',
+    'contact.instagram': 'Suivre sur Instagram',
+    'footer.brand': 'L\'échappée belle sur la Côte d\'Azur. Balades authentiques en side-car vintage entre Nice, Monaco et la French Riviera.',
+    'footer.nav': 'Navigation',
+    'footer.nav.tours': 'Nos City Tours',
+    'footer.reviews': 'Avis clients',
+    'footer.tours.title': 'Nos tours',
+    'footer.book': 'Réservation',
+    'footer.contact.title': 'Contact',
+    'footer.copyright': '© {year} Riviera Sidecar — Tous droits réservés',
+    'footer.deco': 'l\'échappée belle',
+    'float.book': 'Réserver',
+  },
+
+  en: {
+    'nav.home': 'Home',
+    'nav.tours': 'City Tours ▾',
+    'nav.tour.nice': 'Nice: City Tour',
+    'nav.tour.riviera': 'French Riviera City Tour',
+    'nav.tour.night': 'Nice by Night',
+    'nav.events': 'Events',
+    'nav.reviews': 'Reviews',
+    'nav.contact': 'Contact',
+    'nav.book': 'Book Now',
+    'hero.eyebrow': 'Nice · Monaco · Côte d\'Azur',
+    'hero.script': 'the great escape',
+    'hero.sub': 'An authentic and unforgettable experience aboard vintage sidecars, between turquoise sea, hilltop villages and southern light.',
+    'hero.book': 'Book my tour',
+    'hero.discover': 'Discover our tours',
+    'hero.scroll': 'Scroll',
+    'intro.eyebrow': 'The great escape',
+    'intro.title': 'Dive into the soul of the <em>Côte d\'Azur</em>',
+    'intro.p1': 'Come and explore Nice and the French Riviera aboard our sidecars! Let yourself be driven by an experienced driver and enjoy the beauty of the landscapes.',
+    'intro.p2': 'Our sidecar rides are far more than a simple tourist visit: it\'s a dive into the soul of the Côte d\'Azur, a journey through time and space that awakens all the senses. Between sea and mountains, medieval villages and chic seaside resorts, each stop is a new discovery.',
+    'intro.p3': 'Hop on board, let yourself be lulled by the purr of the engine, the sea breeze in your hair, and admire the charm of the Riviera for unforgettable memories.',
+    'intro.stamp.since': 'Since',
+    'tours.eyebrow': 'Our signature itineraries',
+    'tours.title': 'Three <em>rides</em> to experience the Riviera',
+    'tours.lead': 'From Nice to Monaco, from the Promenade des Anglais to hilltop villages, each tour is designed to reveal the magic of the Côte d\'Azur.',
+    'tours.more': 'More info',
+    'tours.night': 'Night',
+    'tour1.title': 'Nice City Tour',
+    'tour1.desc': 'Visit the must-see sights of Nissa la Bella: Place Masséna, Nice Harbour, Mont-Boron, Villefranche-sur-Mer and the famous La Réserve diving board.',
+    'tour2.title': 'French Riviera',
+    'tour2.desc': 'The complete Côte d\'Azur itinerary: Beaulieu-sur-Mer, Cap d\'Ail, Monaco, the F1 circuit, the Grande Corniche, La Turbie and Èze, a perched medieval village.',
+    'tour3.title': 'Nice by Night',
+    'tour3.desc': 'Nice transforms at nightfall. Stroll along the illuminated Promenade des Anglais, with the gentle sea breeze and the lights reflected on the sea. Magic guaranteed.',
+    'exp.eyebrow': 'The Riviera experience',
+    'exp.title': 'Five promises, <em>one unique journey</em>',
+    'feat1.title': 'Comfort & Safety',
+    'feat1.desc': 'A modern vehicle with a vintage style, equipped with the latest safety technologies.',
+    'feat2.title': 'Panoramic View',
+    'feat2.desc': 'Seated in the sidecar, you have an unobstructed view of the landscapes — perfect for memorable photos.',
+    'feat3.title': 'Exclusive Access',
+    'feat3.desc': 'The sidecar slips through narrow streets and picturesque paths inaccessible to cars.',
+    'feat4.title': 'Local Guide',
+    'feat4.desc': 'Your driver is passionate about the region, ready to share anecdotes and secrets of the Riviera.',
+    'feat5.title': 'Authenticity',
+    'feat5.desc': 'Relive the golden age of sidecar travel — nostalgic, elegant, timeless.',
+    'events.eyebrow': 'Tailor-made',
+    'events.title': 'For your most <em>beautiful days</em>',
+    'events.lead': 'We adapt to all your special requests. Listening to your wishes, we will do our best to satisfy you.',
+    'events.item1': 'Weddings & bridal processions',
+    'events.item2': 'Bachelor & bachelorette parties',
+    'events.item3': 'Corporate events & seminars',
+    'events.item4': 'Tasting of local products with <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a>',
+    'events.item5': 'Pick-up at the location of your choice (no surcharge in Nice)',
+    'events.cta': 'Contact us',
+    'press.head': 'They talk about us',
+    'press.quote': 'A retro "French-style" visit that reveals the Riviera from an unexpected and terribly charming angle.',
+    'press.article': '« Sidecar rides to discover the Côte d\'Azur differently »',
+    'test.eyebrow': 'Our clients speak for us',
+    'test.title': 'Memories that <em>last</em>',
+    'test1': '« Superb vintage sidecar ride! A memorable experience! »',
+    'test2': '« A magical visit aboard the sidecar! Franck is passionate and it shows! »',
+    'test3': '« An unforgettable experience through Nice with a super friendly guide. »',
+    'test1.author': 'GetYourGuide Traveller',
+    'test1.country': 'United States',
+    'test2.country': 'Canada',
+    'test3.country': 'Italy',
+    'contact.title': 'Ready to embark?',
+    'contact.script': 'your adventure starts here',
+    'contact.lead': 'Book your ride or contact us for a tailor-made request. We will be delighted to share the Riviera with you.',
+    'contact.book': 'Book online',
+    'contact.instagram': 'Follow on Instagram',
+    'footer.brand': 'The great escape on the Côte d\'Azur. Authentic vintage sidecar rides between Nice, Monaco and the French Riviera.',
+    'footer.nav': 'Navigation',
+    'footer.nav.tours': 'Our City Tours',
+    'footer.reviews': 'Guest reviews',
+    'footer.tours.title': 'Our tours',
+    'footer.book': 'Booking',
+    'footer.contact.title': 'Contact',
+    'footer.copyright': '© {year} Riviera Sidecar — All rights reserved',
+    'footer.deco': 'the great escape',
+    'float.book': 'Book',
+  },
+
+  de: {
+    'nav.home': 'Startseite',
+    'nav.tours': 'City Tours ▾',
+    'nav.tour.nice': 'Nizza: City Tour',
+    'nav.tour.riviera': 'French Riviera City Tour',
+    'nav.tour.night': 'Nizza bei Nacht',
+    'nav.events': 'Veranstaltungen',
+    'nav.reviews': 'Bewertungen',
+    'nav.contact': 'Kontakt',
+    'nav.book': 'Buchen',
+    'hero.eyebrow': 'Nizza · Monaco · Côte d\'Azur',
+    'hero.script': 'die große Flucht',
+    'hero.sub': 'Ein authentisches und unvergessliches Erlebnis an Bord von Vintage-Beiwagen, zwischen türkisfarbenem Meer, Bergdörfern und südlichem Licht.',
+    'hero.book': 'Meine Tour buchen',
+    'hero.discover': 'Touren entdecken',
+    'hero.scroll': 'Scrollen',
+    'intro.eyebrow': 'Die große Flucht',
+    'intro.title': 'Tauchen Sie ein in die Seele der <em>Côte d\'Azur</em>',
+    'intro.p1': 'Besuchen Sie Nizza und die Französische Riviera an Bord unserer Beiwagen! Lassen Sie sich von einem erfahrenen Fahrer führen und genießen Sie die Schönheit der Landschaften.',
+    'intro.p2': 'Unsere Beiwagen-Ausflüge sind weit mehr als ein einfacher Touristenbesuch: Es ist ein Eintauchen in die Seele der Côte d\'Azur, eine Reise durch Zeit und Raum, die alle Sinne weckt. Zwischen Meer und Bergen, mittelalterlichen Dörfern und schicken Badeorten ist jeder Halt eine neue Entdeckung.',
+    'intro.p3': 'Steigen Sie ein, lassen Sie sich vom Schnurren des Motors und der Meeresbrise in den Haaren wiegen und bewundern Sie den Charme der Riviera für unvergessliche Erinnerungen.',
+    'intro.stamp.since': 'Seit',
+    'tours.eyebrow': 'Unsere Signature-Routen',
+    'tours.title': 'Drei <em>Ausfahrten</em> um die Riviera zu erleben',
+    'tours.lead': 'Von Nizza bis Monaco, von der Promenade des Anglais bis zu den Bergdörfern — jede Tour enthüllt die Magie der Côte d\'Azur.',
+    'tours.more': 'Mehr erfahren',
+    'tours.night': 'Nacht',
+    'tour1.title': 'Nizza City Tour',
+    'tour1.desc': 'Besuchen Sie die Sehenswürdigkeiten von Nissa la Bella: Place Masséna, Hafen von Nizza, Mont-Boron, Villefranche-sur-Mer und das berühmte Sprungbrett von La Réserve.',
+    'tour2.title': 'Französische Riviera',
+    'tour2.desc': 'Die komplette Côte d\'Azur Route: Beaulieu-sur-Mer, Cap d\'Ail, Monaco, die F1-Strecke, die Grande Corniche, La Turbie und Èze, ein mittelalterliches Bergdorf.',
+    'tour3.title': 'Nizza bei Nacht',
+    'tour3.desc': 'Nizza verwandelt sich bei Einbruch der Nacht. Schlendern Sie entlang der beleuchteten Promenade des Anglais mit der sanften Meeresbrise und den Lichtern, die sich im Meer spiegeln. Magie garantiert.',
+    'exp.eyebrow': 'Das Riviera-Erlebnis',
+    'exp.title': 'Fünf Versprechen, <em>eine einzigartige Reise</em>',
+    'feat1.title': 'Komfort & Sicherheit',
+    'feat1.desc': 'Ein modernes Fahrzeug im Vintage-Stil, ausgestattet mit den neuesten Sicherheitstechnologien.',
+    'feat2.title': 'Panoramablick',
+    'feat2.desc': 'Im Beiwagen sitzend haben Sie einen ungehinderten Blick auf die Landschaften — ideal für unvergessliche Fotos.',
+    'feat3.title': 'Exklusiver Zugang',
+    'feat3.desc': 'Der Beiwagen schlängelt sich durch enge Gassen und malerische Wege, die für Autos unzugänglich sind.',
+    'feat4.title': 'Ortskundiger Führer',
+    'feat4.desc': 'Ihr Fahrer ist ein Kenner der Region und bereit, Anekdoten und Geheimnisse der Riviera zu teilen.',
+    'feat5.title': 'Authentizität',
+    'feat5.desc': 'Erleben Sie das goldene Zeitalter des Beiwagen-Reisens — nostalgisch, elegant, zeitlos.',
+    'events.eyebrow': 'Maßgeschneidert',
+    'events.title': 'Für Ihre schönsten <em>Momente</em>',
+    'events.lead': 'Wir passen uns allen Ihren besonderen Wünschen an und tun unser Bestes, um Sie zufriedenzustellen.',
+    'events.item1': 'Hochzeiten & Hochzeitskorso',
+    'events.item2': 'Junggesellenabschiede',
+    'events.item3': 'Firmenveranstaltungen & Seminare',
+    'events.item4': 'Verkostung lokaler Produkte mit <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a>',
+    'events.item5': 'Abholung am Ort Ihrer Wahl (kein Aufpreis in Nizza)',
+    'events.cta': 'Kontakt aufnehmen',
+    'press.head': 'Sie berichten über uns',
+    'press.quote': 'Ein retro-französischer Besuch, der die Riviera aus einem unerwarteten und unglaublich charmanten Blickwinkel enthüllt.',
+    'press.article': '« Beiwagentouren, um die Côte d\'Azur anders zu entdecken »',
+    'test.eyebrow': 'Unsere Kunden sprechen für uns',
+    'test.title': 'Erinnerungen, die <em>bleiben</em>',
+    'test1': '« Herrliche Fahrt im Vintage-Beiwagen! Ein unvergessliches Erlebnis! »',
+    'test2': '« Ein magischer Besuch im Beiwagen! Franck ist leidenschaftlich und das merkt man! »',
+    'test3': '« Ein unvergessliches Erlebnis durch Nizza mit einem super freundlichen Guide. »',
+    'test1.author': 'GetYourGuide-Reisender',
+    'test1.country': 'Vereinigte Staaten',
+    'test2.country': 'Kanada',
+    'test3.country': 'Italien',
+    'contact.title': 'Bereit zum Einsteigen?',
+    'contact.script': 'Ihr Abenteuer beginnt hier',
+    'contact.lead': 'Buchen Sie Ihre Tour oder kontaktieren Sie uns für eine individuelle Anfrage. Wir freuen uns, die Riviera mit Ihnen zu teilen.',
+    'contact.book': 'Online buchen',
+    'contact.instagram': 'Auf Instagram folgen',
+    'footer.brand': 'Die große Flucht an der Côte d\'Azur. Authentische Vintage-Beiwagen-Fahrten zwischen Nizza, Monaco und der Französischen Riviera.',
+    'footer.nav': 'Navigation',
+    'footer.nav.tours': 'Unsere City Tours',
+    'footer.reviews': 'Gästebewertungen',
+    'footer.tours.title': 'Unsere Touren',
+    'footer.book': 'Buchung',
+    'footer.contact.title': 'Kontakt',
+    'footer.copyright': '© {year} Riviera Sidecar — Alle Rechte vorbehalten',
+    'footer.deco': 'die große Flucht',
+    'float.book': 'Buchen',
+  },
+
+  it: {
+    'nav.home': 'Home',
+    'nav.tours': 'City Tours ▾',
+    'nav.tour.nice': 'Nizza: City Tour',
+    'nav.tour.riviera': 'French Riviera City Tour',
+    'nav.tour.night': 'Nizza di Notte',
+    'nav.events': 'Eventi',
+    'nav.reviews': 'Recensioni',
+    'nav.contact': 'Contatto',
+    'nav.book': 'Prenota',
+    'hero.eyebrow': 'Nizza · Monaco · Côte d\'Azur',
+    'hero.script': 'la grande fuga',
+    'hero.sub': 'Un\'esperienza autentica e indimenticabile a bordo di sidecar vintage, tra mare turchese, borghi arroccati e luce del Sud.',
+    'hero.book': 'Prenota il mio tour',
+    'hero.discover': 'Scopri i tour',
+    'hero.scroll': 'Scorri',
+    'intro.eyebrow': 'La grande fuga',
+    'intro.title': 'Immergiti nell\'anima della <em>Côte d\'Azur</em>',
+    'intro.p1': 'Venite a visitare Nizza e la French Riviera a bordo dei nostri sidecar! Lasciatevi condurre da un autista esperto e godetevi la bellezza dei paesaggi.',
+    'intro.p2': 'I nostri giri in sidecar sono molto più di una semplice visita turistica: è un\'immersione nell\'anima della Côte d\'Azur, un viaggio nel tempo e nello spazio che risveglia tutti i sensi. Tra mare e montagna, borghi medievali e chic stazioni balneari, ogni tappa è una nuova scoperta.',
+    'intro.p3': 'Salite a bordo, lasciatevi cullare dal ronzio del motore, dalla brezza marina tra i capelli, e ammirate il fascino della Riviera per ricordi indelebili.',
+    'intro.stamp.since': 'Dal',
+    'tours.eyebrow': 'I nostri itinerari signature',
+    'tours.title': 'Tre <em>gite</em> per vivere la Riviera',
+    'tours.lead': 'Da Nizza a Monaco, dalla Promenade des Anglais ai borghi arroccati, ogni tour svela la magia della Côte d\'Azur.',
+    'tours.more': 'Più informazioni',
+    'tours.night': 'Notte',
+    'tour1.title': 'Nizza City Tour',
+    'tour1.desc': 'Visitate i luoghi imperdibili di Nissa la Bella: Piazza Masséna, Porto di Nizza, Mont-Boron, Villefranche-sur-Mer e il famoso trampolino di La Réserve.',
+    'tour2.title': 'Costa Azzurra',
+    'tour2.desc': 'L\'itinerario completo della Côte d\'Azur: Beaulieu-sur-Mer, Cap d\'Ail, Monaco, il circuito di F1, la Grande Corniche, La Turbie ed Èze, borgo medievale arroccato.',
+    'tour3.title': 'Nizza di Notte',
+    'tour3.desc': 'Nizza si trasforma al calar della notte. Passeggiate lungo la Promenade des Anglais illuminata, con la dolce brezza marina e le luci che si riflettono sul mare. Magia assicurata.',
+    'exp.eyebrow': 'L\'esperienza Riviera',
+    'exp.title': 'Cinque promesse, <em>un viaggio unico</em>',
+    'feat1.title': 'Comfort & Sicurezza',
+    'feat1.desc': 'Un veicolo moderno in stile vintage, dotato delle ultime tecnologie in materia di sicurezza.',
+    'feat2.title': 'Vista Panoramica',
+    'feat2.desc': 'Seduti nel sidecar, avete una vista libera sui paesaggi — ideale per foto memorabili.',
+    'feat3.title': 'Accesso Esclusivo',
+    'feat3.desc': 'Il sidecar si insinua nei vicoli e nei sentieri pittoreschi inaccessibili alle auto.',
+    'feat4.title': 'Guida Locale',
+    'feat4.desc': 'Il vostro autista è un appassionato della regione, pronto a condividere aneddoti e segreti della Riviera.',
+    'feat5.title': 'Autenticità',
+    'feat5.desc': 'Rivivete l\'età dell\'oro dei viaggi in sidecar — nostalgico, elegante, senza tempo.',
+    'events.eyebrow': 'Su misura',
+    'events.title': 'Per i vostri giorni più <em>belli</em>',
+    'events.lead': 'Ci adattiamo a tutte le vostre richieste particolari. In ascolto dei vostri desideri, faremo del nostro meglio per soddisfarvi.',
+    'events.item1': 'Matrimoni & cortei nuziali',
+    'events.item2': 'Addio al celibato / nubilato',
+    'events.item3': 'Eventi aziendali & seminari',
+    'events.item4': 'Degustazione di prodotti locali con <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a>',
+    'events.item5': 'Presa in carico nel luogo di vostra scelta (senza supplemento su Nizza)',
+    'events.cta': 'Contattaci',
+    'press.head': 'Parlano di noi',
+    'press.quote': 'Una visita retrò "alla francese" che rivela la Riviera da un\'angolazione inaspettata e incredibilmente affascinante.',
+    'press.article': '« Gite in sidecar per scoprire la Côte d\'Azur in modo diverso »',
+    'test.eyebrow': 'I nostri clienti parlano di noi',
+    'test.title': 'Ricordi che <em>durano</em>',
+    'test1': '« Superba gita in sidecar vintage! Un\'esperienza memorabile! »',
+    'test2': '« Una visita magica a bordo del sidecar! Franck è appassionato e si vede! »',
+    'test3': '« Un\'esperienza indimenticabile attraverso Nizza con una guida super simpatica. »',
+    'test1.author': 'Viaggiatore GetYourGuide',
+    'test1.country': 'Stati Uniti',
+    'test2.country': 'Canada',
+    'test3.country': 'Italia',
+    'contact.title': 'Pronti a imbarcarvi?',
+    'contact.script': 'la vostra avventura inizia qui',
+    'contact.lead': 'Prenotate il vostro giro o contattateci per una richiesta su misura. Saremo lieti di condividere la Riviera con voi.',
+    'contact.book': 'Prenota online',
+    'contact.instagram': 'Segui su Instagram',
+    'footer.brand': 'La grande fuga sulla Côte d\'Azur. Autentici giri in sidecar vintage tra Nizza, Monaco e la Riviera Francese.',
+    'footer.nav': 'Navigazione',
+    'footer.nav.tours': 'I nostri City Tours',
+    'footer.reviews': 'Recensioni clienti',
+    'footer.tours.title': 'I nostri tour',
+    'footer.book': 'Prenotazione',
+    'footer.contact.title': 'Contatto',
+    'footer.copyright': '© {year} Riviera Sidecar — Tutti i diritti riservati',
+    'footer.deco': 'la grande fuga',
+    'float.book': 'Prenota',
+  },
+
+  es: {
+    'nav.home': 'Inicio',
+    'nav.tours': 'City Tours ▾',
+    'nav.tour.nice': 'Niza: City Tour',
+    'nav.tour.riviera': 'French Riviera City Tour',
+    'nav.tour.night': 'Niza de Noche',
+    'nav.events': 'Eventos',
+    'nav.reviews': 'Opiniones',
+    'nav.contact': 'Contacto',
+    'nav.book': 'Reservar',
+    'hero.eyebrow': 'Niza · Mónaco · Côte d\'Azur',
+    'hero.script': 'la gran escapada',
+    'hero.sub': 'Una experiencia auténtica e inolvidable a bordo de sidecars vintage, entre el mar turquesa, pueblos encaramados y la luz del Sur.',
+    'hero.book': 'Reservar mi tour',
+    'hero.discover': 'Descubrir los tours',
+    'hero.scroll': 'Desplazar',
+    'intro.eyebrow': 'La gran escapada',
+    'intro.title': 'Sumérjase en el alma de la <em>Côte d\'Azur</em>',
+    'intro.p1': '¡Venga a visitar Niza y la Riviera Francesa a bordo de nuestros sidecars! Déjese llevar por un conductor experimentado y disfrute de la belleza de los paisajes.',
+    'intro.p2': 'Nuestros paseos en sidecar son mucho más que una simple visita turística: es una inmersión en el alma de la Côte d\'Azur, un viaje en el tiempo y el espacio que despierta todos los sentidos. Entre el mar y la montaña, pueblos medievales y elegantes estaciones balnearias, cada etapa es un nuevo descubrimiento.',
+    'intro.p3': 'Súbase a bordo, déjese mecer por el ronroneo del motor, la brisa marina en su cabello, y admire el encanto de la Riviera para recuerdos imperecederos.',
+    'intro.stamp.since': 'Desde',
+    'tours.eyebrow': 'Nuestros itinerarios estrella',
+    'tours.title': 'Tres <em>paseos</em> para vivir la Riviera',
+    'tours.lead': 'De Niza a Mónaco, de la Promenade des Anglais a los pueblos encaramados, cada tour revela la magia de la Côte d\'Azur.',
+    'tours.more': 'Más información',
+    'tours.night': 'Noche',
+    'tour1.title': 'Niza City Tour',
+    'tour1.desc': 'Visite los lugares imprescindibles de Nissa la Bella: Place Masséna, Puerto de Niza, Mont-Boron, Villefranche-sur-Mer y el famoso trampolín de La Réserve.',
+    'tour2.title': 'Riviera Francesa',
+    'tour2.desc': 'El itinerario completo de la Côte d\'Azur: Beaulieu-sur-Mer, Cap d\'Ail, Mónaco, el circuito de F1, la Grande Corniche, La Turbie y Èze, pueblo medieval encaramado.',
+    'tour3.title': 'Niza de Noche',
+    'tour3.desc': 'Niza se transforma al caer la noche. Pasee por la iluminada Promenade des Anglais, con la suave briza marina y las luces reflejadas en el mar. Magia garantizada.',
+    'exp.eyebrow': 'La experiencia Riviera',
+    'exp.title': 'Cinco promesas, <em>un viaje único</em>',
+    'feat1.title': 'Comodidad & Seguridad',
+    'feat1.desc': 'Un vehículo moderno de estilo vintage, equipado con las últimas tecnologías en materia de seguridad.',
+    'feat2.title': 'Vista Panorámica',
+    'feat2.desc': 'Sentado en el sidecar, tiene una vista despejada de los paisajes — ideal para fotos memorables.',
+    'feat3.title': 'Acceso Exclusivo',
+    'feat3.desc': 'El sidecar se cuela por callejuelas y caminos pintorescos inaccesibles para los coches.',
+    'feat4.title': 'Guía Local',
+    'feat4.desc': 'Su conductor es un apasionado de la región, listo para compartir anécdotas y secretos de la Riviera.',
+    'feat5.title': 'Autenticidad',
+    'feat5.desc': 'Reviva la edad de oro de los viajes en sidecar — nostálgico, elegante, atemporal.',
+    'events.eyebrow': 'A medida',
+    'events.title': 'Para sus días más <em>especiales</em>',
+    'events.lead': 'Nos adaptamos a todas sus peticiones particulares. Escuchando sus deseos, haremos lo posible para satisfacerle.',
+    'events.item1': 'Bodas & cortejo nupcial',
+    'events.item2': 'Despedidas de soltero / de soltera',
+    'events.item3': 'Eventos de empresa & seminarios',
+    'events.item4': 'Degustación de productos locales con <a href="https://www.restaurant-lou-bantry.fr/" style="color:var(--gold-2); text-decoration:underline;">Lou Bantry</a>',
+    'events.item5': 'Recogida en el lugar de su elección (sin suplemento en Niza)',
+    'events.cta': 'Contáctenos',
+    'press.head': 'Hablan de nosotros',
+    'press.quote': 'Una visita retro «a la francesa» que revela la Riviera desde un ángulo inesperado y tremendamente encantador.',
+    'press.article': '« Paseos en sidecar para descubrir la Côte d\'Azur de otra manera »',
+    'test.eyebrow': 'Nuestros clientes hablan de nosotros',
+    'test.title': 'Recuerdos que <em>perduran</em>',
+    'test1': '« ¡Magnífico paseo en sidecar vintage! ¡Una experiencia memorable! »',
+    'test2': '« ¡Una visita mágica a bordo del sidecar! ¡Franck es apasionado y se nota! »',
+    'test3': '« Una experiencia inolvidable por Niza con un guía muy simpático. »',
+    'test1.author': 'Viajero GetYourGuide',
+    'test1.country': 'Estados Unidos',
+    'test2.country': 'Canadá',
+    'test3.country': 'Italia',
+    'contact.title': '¿Listos para embarcar?',
+    'contact.script': 'su aventura empieza aquí',
+    'contact.lead': 'Reserve su paseo o contáctenos para una solicitud a medida. Estaremos encantados de compartir la Riviera con usted.',
+    'contact.book': 'Reservar en línea',
+    'contact.instagram': 'Seguir en Instagram',
+    'footer.brand': 'La gran escapada en la Côte d\'Azur. Auténticos paseos en sidecar vintage entre Niza, Mónaco y la Riviera Francesa.',
+    'footer.nav': 'Navegación',
+    'footer.nav.tours': 'Nuestros City Tours',
+    'footer.reviews': 'Opiniones de clientes',
+    'footer.tours.title': 'Nuestros tours',
+    'footer.book': 'Reserva',
+    'footer.contact.title': 'Contacto',
+    'footer.copyright': '© {year} Riviera Sidecar — Todos los derechos reservados',
+    'footer.deco': 'la gran escapada',
+    'float.book': 'Reservar',
+  }
+};
+
+const flags = { fr: '🇫🇷', en: '🇬🇧', de: '🇩🇪', it: '🇮🇹', es: '🇪🇸' };
+const flagUrls = {
+  fr: 'https://flagcdn.com/w40/fr.png',
+  en: 'https://flagcdn.com/w40/gb.png',
+  de: 'https://flagcdn.com/w40/de.png',
+  it: 'https://flagcdn.com/w40/it.png',
+  es: 'https://flagcdn.com/w40/es.png'
+};
+const codes = { fr: 'FR', en: 'EN', de: 'DE', it: 'IT', es: 'ES' };
+let currentLang = 'fr';
+
+function setLanguage(lang) {
+  if (!i18n[lang]) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+
+  // Plain text
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+
+  // HTML content
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+
+  // Copyright with year
+  const copyright = document.getElementById('copyright');
+  if (copyright && i18n[lang]['footer.copyright']) {
+    copyright.textContent = i18n[lang]['footer.copyright'].replace('{year}', new Date().getFullYear());
+  }
+
+  // Switcher UI
+  // Update flag button
+  const flagBtn = document.getElementById('langFlagBtn');
+  if (flagBtn && flagUrls[lang]) {
+    flagBtn.src = flagUrls[lang];
+    flagBtn.alt = lang.toUpperCase();
+  }
+  document.querySelectorAll('.lang-option').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  // Close dropdown
+  document.getElementById('langSwitcher').classList.remove('open');
+
+  // Save preference
+  try { localStorage.setItem('rs-lang', lang); } catch(e) {}
+}
+
+// Lang switcher toggle
+const langBtn = document.getElementById('langBtn');
+const langSwitcher = document.getElementById('langSwitcher');
+
+langBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  langSwitcher.classList.toggle('open');
+});
+
+document.querySelectorAll('.lang-option').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    setLanguage(btn.getAttribute('data-lang'));
+  });
+});
+
+document.addEventListener('click', () => langSwitcher.classList.remove('open'));
+langSwitcher.addEventListener('click', e => e.stopPropagation());
+
+// ============================================================
+// NAV SCROLL
+// ============================================================
+const nav = document.getElementById('nav');
+const onScroll = () => {
+  if (window.scrollY > 60) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+};
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+const toggle = document.getElementById('navToggle');
+const menu = document.getElementById('navMenu');
+toggle.addEventListener('click', () => {
+  toggle.classList.toggle('open');
+  menu.classList.toggle('open');
+});
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  if (menu.classList.contains('open')) {
+    toggle.classList.remove('open');
+    menu.classList.remove('open');
+  }
+}));
+
+// ============================================================
+// INIT
+// ============================================================
+// Init copyright in French
+document.getElementById('copyright').textContent =
+  i18n.fr['footer.copyright'].replace('{year}', new Date().getFullYear());
+
+// Load saved or browser language
+try {
+  const saved = localStorage.getItem('rs-lang');
+  if (saved && i18n[saved]) {
+    setLanguage(saved);
+  } else {
+    const browserLang = (navigator.language || 'fr').slice(0, 2).toLowerCase();
+    if (i18n[browserLang]) setLanguage(browserLang);
+  }
+} catch(e) {}
+</script>
+
+</body>
+</html>
