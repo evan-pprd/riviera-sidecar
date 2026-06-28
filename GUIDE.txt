@@ -1,0 +1,203 @@
+╔══════════════════════════════════════════════════════════════════╗
+║           RIVIERA SIDECAR — GUIDE DE MODIFICATION              ║
+║                     riviera-sidecar.fr                         ║
+╚══════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. STRUCTURE DES FICHIERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+riviera-sidecar/
+├── index.html                  → Page d'accueil principale
+├── nice_city_tour.html         → Page tour Nice City Tour
+├── french_riviera_city_tour.html → Page tour French Riviera
+├── nice_by_night.html          → Page tour Nice by Night
+├── style.css                   → TOUT le CSS du site
+├── main.js                     → TOUT le JavaScript + traductions
+├── GUIDE.txt                   → Ce fichier
+└── README.md                   → Instructions déploiement GitHub
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. MODIFIER LES COULEURS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Toutes les couleurs sont définies en variables CSS au début de style.css
+dans le bloc :root { } (lignes 1-20).
+
+Variables disponibles :
+  --ivory       #F4ECD8   Fond crème principal
+  --ivory-2     #EDE2C8   Fond crème secondaire
+  --paper       #FAF4E4   Fond très clair (sections press, footer nav)
+  --navy        #0E2A47   Bleu marine (textes, arrière-plans sombres)
+  --navy-2      #07182B   Bleu marine foncé (footer, hero)
+  --gold        #C8A560   Or principal (accents, boutons, liens)
+  --gold-2      #B0883E   Or foncé (hover, accents secondaires)
+  --terracotta  #C26B4E   Terracotta (non utilisé actuellement)
+  --sea         #1F5F8C   Bleu mer (non utilisé actuellement)
+  --ink         #15212F   Couleur texte principal
+  --muted       #5A6675   Texte secondaire grisé
+
+Exemple — changer l'or en bronze :
+  Avant : --gold: #C8A560;
+  Après  : --gold: #A0785A;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. MODIFIER LES POLICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les polices sont chargées via Google Fonts dans <head> de chaque HTML :
+  Bebas Neue   → Titres en capitales (nav, badges, boutons)
+  Italiana     → Titres élégants (section titles)
+  Lora         → Corps de texte
+  Pinyon Script → Textes manuscrits (hero script, footer deco)
+
+Pour changer une police, modifier :
+  1. Le lien Google Fonts dans le <head> HTML
+  2. La variable correspondante dans style.css :
+     --font-display : "Bebas Neue", sans-serif;
+     --font-serif   : "Italiana", serif;
+     --font-body    : "Lora", serif;
+     --font-script  : "Pinyon Script", cursive;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. MODIFIER LES TEXTES & TRADUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le système de traduction est dans main.js, objet "i18n".
+Structure : i18n.fr, i18n.en, i18n.de, i18n.it, i18n.es
+
+Dans le HTML, chaque élément traduit a l'attribut :
+  data-i18n="clé"       → remplace le texte (textContent)
+  data-i18n-html="clé"  → remplace le HTML (permet <em>, <a>, etc.)
+
+Pour modifier un texte :
+  1. Chercher la clé dans le HTML : data-i18n="hero.sub"
+  2. Dans main.js, trouver i18n.fr et modifier la valeur de 'hero.sub'
+  3. Répéter pour les 4 autres langues (en, de, it, es)
+
+Clés importantes :
+  nav.home / nav.tours / nav.events → Navigation principale
+  hero.script                        → Texte manuscrit du héros
+  hero.sub                           → Sous-titre du héros
+  hero.book / hero.discover          → Boutons du héros
+  intro.title (html)                 → Titre section intro
+  tours.title (html)                 → Titre section tours
+  footer.copyright                   → Copyright ({year} = année auto)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. AJOUTER UNE NOUVELLE LANGUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dans main.js :
+  1. Ajouter un bloc i18n.pt: { ... } avec toutes les clés
+  2. Ajouter dans l'objet "flags" : pt: '🇵🇹'
+  3. Ajouter dans "flagUrls" : pt: 'https://flagcdn.com/w40/pt.png'
+
+Dans CHAQUE fichier HTML, ajouter dans le dropdown :
+  <button class="lang-option" data-lang="pt">
+    <img class="lang-flag-img" src="https://flagcdn.com/w40/pt.png" alt="Português" />
+    Português
+  </button>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. MODIFIER LES LIENS DE RÉSERVATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Liens de réservation dans les fichiers HTML (chercher et remplacer) :
+  SumUp    : https://www.sumupbookings.com/riviera-sidecar
+  GetYourGuide : https://www.getyourguide.com/s/?q=supplier:493739
+  Explore NCA  : https://www.explorenicecotedazur.com/fiche/riviera-sidecar/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. MODIFIER LES IMAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les images proviennent de riviera-sidecar.fr :
+  https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_1.jpg
+  https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_2.jpg
+  https://www.riviera-sidecar.fr/img/biblio_img/NICE_CITY_TOUR_3.jpg
+
+Pour changer une image, remplacer l'URL dans le HTML.
+Pour les photos hébergées localement, placer les fichiers dans le
+même dossier et utiliser un chemin relatif : src="img/ma-photo.jpg"
+
+Hero background : attribut style="background-image:url('...')"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. CLASSES CSS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Mise en page :
+  .container         → Centré, max 1240px, padding latéral 28px
+  .section           → Section standard, padding 120px haut/bas
+  .section-eyebrow   → Étiquette dorée au-dessus des titres
+  .section-title     → Grand titre de section (Italiana)
+  .section-lead      → Texte d'introduction grisé
+
+Composants :
+  .nav               → Navigation fixe (+ .scrolled sur scroll)
+  .btn               → Bouton générique
+  .btn-primary       → Bouton fond doré
+  .btn-outline       → Bouton contour ivoire
+  .tour-card         → Carte tour avec image + body
+  .testimonial       → Carte témoignage
+  .feature           → Bloc avantage (section Expérience)
+  .float-book        → Bouton flottant de réservation (mobile)
+
+Pages tours uniquement :
+  .tour-hero         → Hero de page tour
+  .tour-main-grid    → Grille 2 colonnes (contenu + sidebar)
+  .tour-sidebar      → Encart infos pratiques fond marine
+  .itinerary-list    → Liste des étapes avec tirets
+  .included-grid     → Grille 2 colonnes des inclusions
+  .tour-booking      → Section CTA de réservation
+  .related-tours     → Section tours suggérés
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. POINTS DE RUPTURE RESPONSIVE (breakpoints)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+≤ 1024px  → Tablette  : menu hamburger, grilles 2 colonnes
+≤  768px  → Mobile    : grilles 1 colonne, sections réduites
+≤  640px  → Petit tel : conteneur 16px, boutons empilés
+≤  380px  → Très petit: espaces minimum, police réduite
+
+Dans style.css, chercher @media pour trouver chaque breakpoint.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. AJOUTER UNE NOUVELLE PAGE TOUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Copier nice_city_tour.html → nouveau_tour.html
+2. Modifier le <title>, meta description
+3. Changer la photo hero (background-image dans .tour-hero-bg)
+4. Remplacer les data-i18n="nct.*" par de nouvelles clés
+5. Dans main.js, ajouter les nouvelles clés pour les 5 langues
+6. Ajouter le lien dans la nav (dans TOUS les fichiers HTML)
+7. Ajouter la carte dans .related-grid des autres pages
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. DÉPLOIEMENT GITHUB PAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Créer un dépôt GitHub (ex: riviera-sidecar)
+2. Déposer TOUS les fichiers à la racine du dépôt
+3. Settings → Pages → Branch: main → / (root) → Save
+4. URL : https://[votre-username].github.io/riviera-sidecar
+
+Important : ne jamais déplacer style.css ou main.js dans un
+sous-dossier sans mettre à jour les <link> et <script src=""> dans
+chaque fichier HTML.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. CONTACT & INFORMATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Téléphone : 07 44 98 54 88
+Email      : contact@riviera-sidecar.fr
+Instagram  : @riviera.sidecar
+Site       : www.riviera-sidecar.fr
+
+╔══════════════════════════════════════════════════════════════════╗
+║  Riviera Sidecar © 2024 — L'échappée belle sur la Côte d'Azur ║
+╚══════════════════════════════════════════════════════════════════╝
