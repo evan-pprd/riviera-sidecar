@@ -845,39 +845,67 @@ menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 // ============================================================
 // INIT
 // ============================================================
-// Init copyright in French
+// Init copyright
 document.getElementById('copyright').textContent =
   i18n.fr['footer.copyright'].replace('{year}', new Date().getFullYear());
 
 // ============================================================
-// DÉTECTION AUTOMATIQUE — IP uniquement
+// DÉTECTION & PERSISTANCE DE LA LANGUE
+// 1. localStorage  → langue déjà choisie (persiste entre toutes les pages)
+// 2. IP géoloc     → premier chargement uniquement
+// 3. Français      → fallback si IP échoue
 // ============================================================
 const countryToLang = {
-  FR:'fr', MC:'fr', BE:'fr', LU:'fr', CH:'fr',
-  CI:'fr', SN:'fr', CM:'fr', ML:'fr', BF:'fr',
-  MG:'fr', RW:'fr', TN:'fr', MA:'fr', DZ:'fr',
-  GP:'fr', MQ:'fr', GF:'fr', RE:'fr', PM:'fr',
-  GB:'en', US:'en', CA:'en', AU:'en', NZ:'en',
-  IE:'en', ZA:'en', IN:'en', NG:'en', GH:'en',
-  SG:'en', HK:'en', MT:'en', JM:'en', TT:'en',
+  FR:'fr', MC:'fr', BE:'fr', LU:'fr', CH:'fr', GP:'fr', MQ:'fr',
+  GF:'fr', RE:'fr', PM:'fr', MF:'fr', WF:'fr', TF:'fr', NC:'fr',
+  CI:'fr', SN:'fr', CM:'fr', ML:'fr', BF:'fr', MG:'fr', RW:'fr',
+  TN:'fr', MA:'fr', DZ:'fr', CD:'fr', CG:'fr', GA:'fr', BI:'fr',
+  GB:'en', US:'en', CA:'en', AU:'en', NZ:'en', IE:'en', ZA:'en',
+  IN:'en', NG:'en', GH:'en', SG:'en', HK:'en', MT:'en', JM:'en',
+  TT:'en', BZ:'en', BB:'en', GY:'en', BS:'en', FJ:'en', PG:'en',
   IT:'it', SM:'it', VA:'it',
   DE:'de', AT:'de', LI:'de',
-  ES:'es', MX:'es', AR:'es', CO:'es', PE:'es',
-  VE:'es', CL:'es', EC:'es', BO:'es', PY:'es',
-  UY:'es', GT:'es', HN:'es', SV:'es', NI:'es',
-  CR:'es', PA:'es', CU:'es', DO:'es', PR:'es',
+  ES:'es', MX:'es', AR:'es', CO:'es', PE:'es', VE:'es', CL:'es',
+  EC:'es', BO:'es', PY:'es', UY:'es', GT:'es', HN:'es', SV:'es',
+  NI:'es', CR:'es', PA:'es', CU:'es', DO:'es', PR:'es', GQ:'es',
 };
 
-(async () => {
+async function getIPLang() {
+  // Essai service principal
   try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 3000);
-    const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-    if (res.ok) {
-      const data = await res.json();
-      const lang = countryToLang[data.country_code];
-      if (lang && i18n[lang]) { setLanguage(lang); return; }
+    const c = new AbortController();
+    setTimeout(() => c.abort(), 3000);
+    const r = await fetch('https://ipapi.co/json/', { signal: c.signal });
+    if (r.ok) {
+      const d = await r.json();
+      if (d.country_code && countryToLang[d.country_code])
+        return countryToLang[d.country_code];
     }
   } catch(e) {}
-  setLanguage('fr');
+
+  // Service de secours
+  try {
+    const c = new AbortController();
+    setTimeout(() => c.abort(), 3000);
+    const r = await fetch('https://api.country.is/', { signal: c.signal });
+    if (r.ok) {
+      const d = await r.json();
+      if (d.country && countryToLang[d.country])
+        return countryToLang[d.country];
+    }
+  } catch(e) {}
+
+  return null;
+}
+
+(async () => {
+  // 1. Langue déjà enregistrée → application immédiate + sync inter-pages
+  try {
+    const saved = localStorage.getItem('rs-lang');
+    if (saved && i18n[saved]) { setLanguage(saved); return; }
+  } catch(e) {}
+
+  // 2. Première visite → détection IP
+  const lang = await getIPLang();
+  setLanguage(lang && i18n[lang] ? lang : 'fr');
 })();
