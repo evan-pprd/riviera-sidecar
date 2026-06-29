@@ -849,13 +849,64 @@ menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 document.getElementById('copyright').textContent =
   i18n.fr['footer.copyright'].replace('{year}', new Date().getFullYear());
 
-// Load saved or browser language
-try {
-  const saved = localStorage.getItem('rs-lang');
-  if (saved && i18n[saved]) {
-    setLanguage(saved);
-  } else {
-    const browserLang = (navigator.language || 'fr').slice(0, 2).toLowerCase();
-    if (i18n[browserLang]) setLanguage(browserLang);
-  }
-} catch(e) {}
+// ============================================================
+// DÉTECTION AUTOMATIQUE DE LA LANGUE
+// Priorité : 1) choix sauvegardé  2) IP géolocalisation  3) langue navigateur  4) français
+// ============================================================
+
+// Correspondance pays → langue (ISO 3166-1 alpha-2)
+const countryToLang = {
+  // Français
+  FR:'fr', MC:'fr', BE:'fr', LU:'fr', CH:'fr',
+  CI:'fr', SN:'fr', CM:'fr', ML:'fr', BF:'fr',
+  MG:'fr', RW:'fr', TN:'fr', MA:'fr', DZ:'fr',
+  GP:'fr', MQ:'fr', GF:'fr', RE:'fr', PM:'fr',
+  // Anglais
+  GB:'en', US:'en', CA:'en', AU:'en', NZ:'en',
+  IE:'en', ZA:'en', IN:'en', NG:'en', GH:'en',
+  SG:'en', HK:'en', MT:'en', JM:'en', TT:'en',
+  // Italien
+  IT:'it', SM:'it', VA:'it',
+  // Allemand
+  DE:'de', AT:'de', LI:'de',
+  // Espagnol
+  ES:'es', MX:'es', AR:'es', CO:'es', PE:'es',
+  VE:'es', CL:'es', EC:'es', BO:'es', PY:'es',
+  UY:'es', GT:'es', HN:'es', SV:'es', NI:'es',
+  CR:'es', PA:'es', CU:'es', DO:'es', PR:'es',
+};
+
+async function detectAndSetLanguage() {
+  // 1. Préférence déjà sauvegardée → respecter le choix de l'utilisateur
+  try {
+    const saved = localStorage.getItem('rs-lang');
+    if (saved && i18n[saved]) { setLanguage(saved); return; }
+  } catch(e) {}
+
+  // 2. Détection par IP (timeout 3s pour ne pas bloquer le chargement)
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+    clearTimeout(timer);
+    if (res.ok) {
+      const data = await res.json();
+      const lang = countryToLang[data.country_code];
+      if (lang && i18n[lang]) { setLanguage(lang); return; }
+    }
+  } catch(e) { /* Timeout ou erreur réseau → on continue */ }
+
+  // 3. Langue du navigateur / système
+  try {
+    const codes = [navigator.language, ...(navigator.languages || [])];
+    for (const code of codes) {
+      const lang = (code || '').slice(0, 2).toLowerCase();
+      if (i18n[lang]) { setLanguage(lang); return; }
+    }
+  } catch(e) {}
+
+  // 4. Français par défaut
+  setLanguage('fr');
+}
+
+detectAndSetLanguage();
